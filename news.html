@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8"/>
+    <title>News App</title>
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="news_style_.css"/>
+  </head>
+  <script>
+    $(document).ready(function(){
+      $("#search").click(function(){
+        var term=$('#search_term').val();
+        $.ajax({
+        url:"https://newsapi.org/v2/everything?q="+term+"&apiKey=cf040600e83549ada59963e2eeca82ff",
+        success:function(data){
+          $("#result").empty();
+          for(var i in data.articles)         //data.articles is my iterable
+          {
+              $('#result').append('<div class="col-md-3"style="margin-top: 20px"><div class="card"><div class="card-body"><img src='+data.articles[i].urlToImage+' width:"200" height:"200" class="card-img-top" target="_blank"><h4 class="card-title">'+data.articles[i].title+'</h4><p class="card-text">'+data.articles[i].description+'</p><a href="'+data.articles[i].url+'" class="btn btn-danger btn-block">Read More</a></div></div></div>');    //data.articles[i].title=data.articles is our iterable and we pick ith element and select required field only eg:-description title.....etc
+          }
+
+        },
+        error:function(){
+          alert("Some Error Occured");
+        }
+      });
+      });
+      $.ajax({      //to take the data we use this
+        url:"https://newsapi.org/v2/top-headlines?country=in&apiKey=cf040600e83549ada59963e2eeca82ff",    //url of backend API
+        success:function(data){               //if success what to do
+          for(var i in data.articles)         //data.articles is my iterable
+          {
+              $('#result').append('<div class="col-md-3"style="margin-top: 20px"><div class="card"><div class="card-body"><img src='+data.articles[i].urlToImage+' width:"200" height:"200" class="card-img-top" target="_blank"><h4 class="card-title">'+data.articles[i].title+'</h4><p class="card-text">'+data.articles[i].description+'</p><a href="'+data.articles[i].url+'" class="btn bg-reddish btn-block">Read More</a></div></div></div>');    //data.articles[i].title=data.articles is our iterable and we pick ith element and select 'title ' field only
+          }
+        },
+        error:function(){         //if error occures wt to do
+          alert("Some error occured");
+        },
+        type:'GET'      //default also GET other is POST
+      });
+    });
+    </script>
+  <body class="bg_img">
+    <nav class="navbar bg-reddish" style="position:fixed;width:100%;z-index: 1">
+      <h3 class="navbar-brand">News India</h3>
+    </nav>
+    <div class="jumbotron bg-jumbo" style="padding:120px">
+      <div class="row">
+        <div class="offset-md-4 col-md-4">
+          <h4 clas="lead text-md-center">Search here:</h4>
+          <input type="text" class="form-control" placeholder="Search latest news" name="" id="search_term"/><br/>
+          <button class="btn bg-reddish btn-lg" id="search"><i class="fa fa-search"></i>Search</button>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row" id="result">
+
+
+        </div>
+      </div>
+  </body>
+</html>
